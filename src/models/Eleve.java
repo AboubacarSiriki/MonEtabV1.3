@@ -1,6 +1,7 @@
 package models;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -32,6 +33,9 @@ public class Eleve extends Personne {
         super(id, dateNaissance, ville, nom, prenom);
         this.classe = classe;
         this.matricule = matricule;
+    }
+
+    public Eleve(int id, String nom, String prenom, LocalDate localDate, String classe) {
     }
 
     public String getClasse() {

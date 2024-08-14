@@ -17,27 +17,32 @@ public class UtilisateurService implements IUtilisateurService {
 
     @Override
     public boolean authentification(String identifiant, String motDePasse) throws SQLException {
-        Utilisateur user = utilisateurDao.getUser(identifiant,motDePasse);
-        return user!=null;
+        Utilisateur user = utilisateurDao.getUser(identifiant, motDePasse);
+        return user != null;
     }
 
     @Override
-    public boolean ajouterCompte(String identifiant, String motDePasse) {
-        return false;
+    public boolean ajouterCompte(String identifiant, String motDePasse) throws SQLException {
+        return utilisateurDao.addUser(identifiant, motDePasse);
     }
 
     @Override
-    public boolean modifierMotDepass(String identifiant, String motDePasse) {
-        return false;
+    public boolean modifierMotDepass(String identifiant, String motDePasse) throws SQLException {
+        return utilisateurDao.updateUser(identifiant, motDePasse);
     }
 
     @Override
-    public boolean supprimerCompte(String identifiant, String motDePasse) {
-        return false;
+    public boolean supprimerCompte(String identifiant) throws SQLException {
+        return utilisateurDao.deleteUser(identifiant);
     }
 
     @Override
-    public List<Utilisateur> listeUtilisateur() {
-        return List.of();
+    public List<Utilisateur> listeUtilisateur() throws SQLException {
+        return utilisateurDao.listeUtilisateur();
+    }
+
+    @Override
+    public void ajouterCompte(Utilisateur nouvelUtilisateur) {
+
     }
 }

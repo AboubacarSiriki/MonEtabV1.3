@@ -2,48 +2,23 @@ package dao;
 
 import models.Eleve;
 
+import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Interface définissant les opérations CRUD pour la gestion des élèves.
- */
 public interface IEleveDao {
+    boolean addEleve(Eleve eleve) throws SQLException;
+    boolean updateEleve(Eleve eleve) throws SQLException;
+    boolean deleteEleve(int id) throws SQLException;
+    Eleve getEleveById(int id) throws SQLException;
+    List<Eleve> listeEleves() throws SQLException;
 
-    /**
-     * Ajoute un élève.
-     *
-     * @param eleve Élève à ajouter.
-     * @return Élève ajouté.
-     */
-    Eleve Ajouter(Eleve eleve);
+    Eleve ajouter(Eleve eleve);
 
-    /**
-     * Modifie un élève.
-     *
-     * @param eleve Élève à modifier.
-     * @return Élève modifié.
-     */
     Eleve modifier(Eleve eleve);
 
-    /**
-     * Supprime un élève par son identifiant.
-     *
-     * @param identifiant Identifiant de l'élève à supprimer.
-     */
     void supprimer(int identifiant);
 
-    /**
-     * Obtient un élève par son identifiant.
-     *
-     * @param identifiant Identifiant de l'élève.
-     * @return Élève trouvé.
-     */
     Eleve Obtenir(int identifiant);
 
-    /**
-     * Obtient la liste de tous les élèves.
-     *
-     * @return Liste d'élèves.
-     */
-    List<Eleve> obtenirProfesseur();
+    List<Eleve> lister();
 }

@@ -24,8 +24,8 @@ public class Personne {
         return id;
     }
 
-    public Date getDateNaissance() {
-        return dateNaissance;
+    public String getDateNaissance() {
+        return "";
     }
 
     public String getVille() {

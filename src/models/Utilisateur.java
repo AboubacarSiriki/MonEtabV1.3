@@ -2,10 +2,7 @@ package models;
 
 import dao.SingletonDataBase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Utilisateur {
@@ -13,7 +10,7 @@ public class Utilisateur {
     private String identifiant;
     private String motDePass;
 
-    public Utilisateur() {
+    public Utilisateur(String idUtilisateur, String motDePasseUtilisateur) {
     }
 
     public Utilisateur(int id, String identifiant, String motDePass) {

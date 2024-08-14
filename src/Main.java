@@ -1,27 +1,30 @@
 import models.Eleve;
 import models.Professeur;
 import models.Utilisateur;
+import services.IEleveService;
 import services.IUtilisateurService;
+import services.impl.EleveServiceImpl;
 import services.impl.UtilisateurService;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         // Affichage de bienvenue
-        System.out.println("                             ******************************************************");
-        System.out.println("                                     BIENVENU DANS L’APPLICATION ETAB v1.2");
-        System.out.println("                             ******************************************************");
-        System.out.println("                                                   CONNEXION");
+        System.out.println("******************************************************");
+        System.out.println("               BIENVENU DANS L’APPLICATION ETAB v1.2");
+        System.out.println("******************************************************");
 
-        Utilisateur utilisateur = new Utilisateur();
+        String idUtilisateur = null;
+        String motDePasseUtilisateur = null;
+        Utilisateur utilisateur = new Utilisateur(idUtilisateur, motDePasseUtilisateur);
         utilisateur.ajouterUtilisateurDefaut(); // Ajouter l'utilisateur par défaut au démarrage
 
         // Initialisation des variables
@@ -31,6 +34,7 @@ public class Main {
 
         // Boucle d'authentification
         while (!authenticated) {
+            System.out.println("CONNEXION");
             System.out.print("Entrez votre identifiant: ");
             String inputIdentifiant = scanner.nextLine();
 
@@ -41,10 +45,9 @@ public class Main {
             authenticated = utilisateurService.authentification(inputIdentifiant, inputMotDePasse);
 
             if (authenticated) {
-                System.out.println("                                 ******************************************************");
-                System.out.println("                                 ******************************************************");
-                System.out.println("                                          BIENVENU DANS L’APPLICATION ETAB v1.2");
-                System.out.println("                                 ******************************************************");
+                System.out.println("******************************************************");
+                System.out.println("               BIENVENU DANS L’APPLICATION ETAB v1.2");
+                System.out.println("******************************************************");
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 System.out.println("Date et heure actuelles : " + startTime.format(formatter));
@@ -121,9 +124,10 @@ public class Main {
                                             break;
                                         }
 
-                                        Eleve eleve = new Eleve(id, dateNaissance, ville, nom, prenom, classe, matricule);
-                                        //eleve.ajouter(eleve);
-                                        listeEleves.add(eleve);
+                                        IEleveService eleveService = new EleveServiceImpl();
+
+                                        Eleve eleve = new Eleve(0, dateNaissance, ville, nom, prenom, classe, matricule);
+                                        eleveService.save(eleve);
 
                                         System.out.println("Élève ajouté avec succès !");
                                         break;
@@ -178,7 +182,6 @@ public class Main {
                                             System.out.print("Entrez le nouveau matricule : ");
                                             eleveAModifier.setMatricule(scanner.nextLine());
 
-                                            //eleveAModifier.modifier(eleveAModifier);
                                             System.out.println("Informations de l'élève mises à jour avec succès !");
                                         } else {
                                             System.out.println("Élève introuvable.");
@@ -254,30 +257,10 @@ public class Main {
                                         System.out.print("Entrez la matière enseignée par le professeur : ");
                                         String matiere = scanner.nextLine();
 
-                                        System.out.print("Entrez le prochain cours du professeur : ");
-                                        String cours = scanner.nextLine();
+                                        //Professeur professeur = new Professeur(id, ville, nom, prenom, matiere);
+                                        //listeProfesseurs.add(professeur);
 
-                                        System.out.print("Entrez la prochaine reunion avec le professeur: ");
-                                        String reunion = scanner.nextLine();
-
-                                        System.out.print(" Le professeur est-il vacant: ");
-                                        String vacant = scanner.nextLine();
-
-                                        System.out.print("Entrez la date de naissance du professeur (dd/MM/yyyy) : ");
-                                        String dateNaissanceStr = scanner.nextLine();
-                                        Date dateNaissance = null;
-                                        try {
-                                            dateNaissance = new SimpleDateFormat("dd/MM/yyyy").parse(dateNaissanceStr);
-                                        } catch (ParseException e) {
-                                            System.out.println("Format de date invalide. Élève non ajouté.");
-                                            break;
-                                        }
-
-                                        Professeur professeur = new Professeur(id,dateNaissance, ville, nom, prenom,vacant,matiere,cours,reunion);
-                                        //professeur.Ajouter(professeur);
-                                        listeProfesseurs.add(professeur);
-
-                                        System.out.println("models.Professeur ajouté avec succès !");
+                                        System.out.println("Professeur ajouté avec succès !");
                                         break;
                                     case 2:
                                         // Supprimer un professeur
@@ -295,9 +278,9 @@ public class Main {
 
                                         if (professeurASupprimer != null) {
                                             listeProfesseurs.remove(professeurASupprimer);
-                                            System.out.println("models.Professeur supprimé avec succès !");
+                                            System.out.println("Professeur supprimé avec succès !");
                                         } else {
-                                            System.out.println("models.Professeur introuvable.");
+                                            System.out.println("Professeur introuvable.");
                                         }
                                         break;
                                     case 3:
@@ -325,18 +308,11 @@ public class Main {
                                             professeurAModifier.setVille(scanner.nextLine());
 
                                             System.out.print("Entrez la nouvelle matière enseignée : ");
-                                            professeurAModifier.setMatiereEnseigne(scanner.nextLine());
+                                            //professeurAModifier.setMatiere(scanner.nextLine());
 
-                                            System.out.print("Entrez le nouveau cours : ");
-                                            professeurAModifier.setProchainCours(scanner.nextLine());
-
-                                            System.out.print("Entrez la nouvelle reunion : ");
-                                            professeurAModifier.setSujetProchaineReunion(scanner.nextLine());
-
-                                           // professeurAModifier.modifier(professeurAModifier);
                                             System.out.println("Informations du professeur mises à jour avec succès !");
                                         } else {
-                                            System.out.println("models.Professeur introuvable.");
+                                            System.out.println("Professeur introuvable.");
                                         }
                                         break;
                                     case 4:
@@ -369,20 +345,95 @@ public class Main {
                             }
                             break;
                         case 3:
-                            // Gestion des utilisateurs (à implémenter)
-                            System.out.println("Gestion des utilisateurs - Fonctionnalité à implémenter");
+                            // Gestion des utilisateurs
+                            boolean gestionUtilisateur = true;
+                            while (gestionUtilisateur) {
+                                System.out.println("******************************************************");
+                                System.out.println("GESTION DES UTILISATEURS");
+                                System.out.println("******************************************************");
+                                System.out.println("Menu :");
+                                System.out.println("1: Ajouter un utilisateur");
+                                System.out.println("2: Supprimer un utilisateur");
+                                System.out.println("3: Modifier les informations d'un utilisateur");
+                                System.out.println("4: Lister les utilisateurs");
+                                System.out.println("5: Retour");
+                                System.out.println("0: Accueil");
+                                System.out.println("******************************************************");
+
+                                System.out.print("Choisissez une option : ");
+                                int choixUtilisateur = scanner.nextInt();
+                                scanner.nextLine(); // Consommer la ligne restante
+
+                                switch (choixUtilisateur) {
+                                    case 1:
+                                        // Ajouter un utilisateur
+                                        System.out.print("Entrez l'identifiant de l'utilisateur : ");
+                                        idUtilisateur = scanner.nextLine();
+
+                                        System.out.print("Entrez le mot de passe de l'utilisateur : ");
+                                        motDePasseUtilisateur = scanner.nextLine();
+
+                                        Utilisateur nouvelUtilisateur = new Utilisateur(idUtilisateur, motDePasseUtilisateur);
+                                        utilisateurService.ajouterCompte(idUtilisateur,motDePasseUtilisateur);
+
+                                        System.out.println("Utilisateur ajouté avec succès !");
+                                        break;
+                                    case 2:
+                                        // Supprimer un utilisateur
+                                        System.out.print("Entrez l'identifiant de l'utilisateur à supprimer : ");
+                                        String idUtilisateurASupprimer = scanner.nextLine();
+
+                                        utilisateurService.supprimerCompte(idUtilisateurASupprimer);
+
+                                        System.out.println("Utilisateur supprimé avec succès !");
+                                        break;
+                                    case 3:
+                                        // Modifier les informations d'un utilisateur
+                                        System.out.print("Entrez l'identifiant de l'utilisateur à modifier : ");
+                                        String idUtilisateurAModifier = scanner.nextLine();
+
+                                        System.out.print("Entrez le nouveau mot de passe : ");
+                                        String nouveauMotDePasse = scanner.nextLine();
+
+                                        utilisateurService.modifierMotDepass(idUtilisateurAModifier, nouveauMotDePasse);
+
+                                        System.out.println("Informations de l'utilisateur mises à jour avec succès !");
+                                        break;
+                                    case 4:
+                                        // Lister les utilisateurs
+                                        ArrayList<Utilisateur> listeUtilisateurs = (ArrayList<Utilisateur>) utilisateurService.listeUtilisateur();
+                                        System.out.println("Liste des utilisateurs :");
+                                        for (Utilisateur u : listeUtilisateurs) {
+                                            System.out.println(u);
+                                        }
+                                        break;
+                                    case 5:
+                                        // Retour au menu principal
+                                        gestionUtilisateur = false;
+                                        break;
+                                    case 0:
+                                        // Retour à l'accueil
+                                        running = false;
+                                        gestionUtilisateur = false;
+                                        break;
+                                    default:
+                                        System.out.println("Option invalide, veuillez réessayer.");
+                                }
+                            }
                             break;
                         case 0:
-                            // Quitter l'application
+                            // Quitter
                             running = false;
-                            System.out.println("Déconnexion réussie. Merci d'avoir utilisé l'application ETAB v1.2.");
+                            System.out.println("******************************************************");
+                            System.out.println("MERCI D'AVOIR UTILISÉ L’APPLICATION ETAB v1.2");
+                            System.out.println("******************************************************");
                             break;
                         default:
                             System.out.println("Option invalide, veuillez réessayer.");
                     }
                 }
             } else {
-                System.out.println("Identifiant ou mot de passe incorrect. Veuillez réessayer.");
+                System.out.println("Identifiant ou mot de passe incorrect, veuillez réessayer.");
             }
         }
     }
